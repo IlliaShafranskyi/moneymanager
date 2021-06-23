@@ -1,32 +1,42 @@
 #include <iostream>
 #include <fstream>
 
-void add_expensive(std::string name_expensive, int summ) {
+
+void add_first_expense_to_file(std::string name, int summ, int balance);
+int readFromFile(std::string name_file);
+void writeToFile(std::string name_file, int number);
+bool isExist(std::string file_name);
+
+void add_expensive(std::string name_expensive, int summ, int balance) {
 
 		std::string name_file = "expenses/" + name_expensive;
 		bool res = isExist(name_file);
 		if(res) {
 				int tmp = readFromFile(name_file);
 				summ += tmp;
+				balance -= summ;
 				writeToFile(name_file, summ);
+				writeToFile("balance.txt", balance);
+
 		}
 		else {
-				std::cout << "not exist" << std::endl;
-				add_first_expense_to_file(name_expensive, summ);
+				add_first_expense_to_file(name_expensive, summ, balance);
 		}
 
 }
-void add_first_expense_to_file(std::string name, int summ) {
+void add_first_expense_to_file(std::string name, int summ, int balance) {
 		std::ofstream out;
 		std::string dest = "expenses/" + name;
 		out.open(dest);
 		if(out.is_open()) {
+				balance -= summ;
 				out << summ << std::endl;
 		}
 		else {
 				std::cout << "failed" << std::endl;
 		}
 		out.close();
+		writeToFile("balance.txt", balance);
 }
 
 bool isExist(std::string file_name) {
@@ -56,16 +66,12 @@ void writeToFile(std::string name_file, int number) {
 		out.open(name_file);
 		out << number << std::endl;
 		out.close();
-		
 }
 
 void main_menu() {
-
-		std::ifstream info_user;
-		info_user.open("info.txt");
+		int balance = readFromFile("balance.txt");
 
 		printf("\033c");
-		int balance;
 		std::cout << "WELCOME TO THE MONEY MANAGER" << std::endl;
 		
 		std::string action;
@@ -95,7 +101,22 @@ void main_menu() {
 
 						switch(choose_category) {
 								case (1):
-										add_expensive("food.txt", summ);
+										add_expensive("food.txt", summ, balance);
+										break;
+								case (2):
+										add_expensive("transport.txt", summ, balance);
+										break;
+								case (3):
+										add_expensive("recreation.txt", summ, balance);
+										break;
+								case (4):
+										add_expensive("health.txt", summ, balance);
+										break;
+								case (5):
+										add_expensive("gifts.txt", summ, balance);
+										break;
+								case (6):
+										add_expensive("others.txt", summ, balance);
 										break;
 						}
 				}
