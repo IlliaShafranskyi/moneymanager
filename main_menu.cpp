@@ -1,7 +1,22 @@
 #include <iostream>
 #include <fstream>
 
-void add_expense_to_file(std::string name, int summ) {
+void add_expensive(std::string name_expensive, int summ) {
+
+		std::string name_file = "expenses/" + name_expensive;
+		bool res = isExist(name_file);
+		if(res) {
+				int tmp = readFromFile(name_file);
+				summ += tmp;
+				writeToFile(name_file, summ);
+		}
+		else {
+				std::cout << "not exist" << std::endl;
+				add_first_expense_to_file(name_expensive, summ);
+		}
+
+}
+void add_first_expense_to_file(std::string name, int summ) {
 		std::ofstream out;
 		std::string dest = "expenses/" + name;
 		out.open(dest);
@@ -22,6 +37,25 @@ bool isExist(std::string file_name) {
 		else {
 				return false;
 		}
+		
+}
+
+int readFromFile(std::string name_file) {
+		std::ifstream in(name_file);
+		std::string tmp_sum;
+		getline(in, tmp_sum);
+		int str_to_int = std::stoi(tmp_sum);
+		in.close();
+
+
+		return str_to_int;
+}
+
+void writeToFile(std::string name_file, int number) {
+		std::ofstream out;
+		out.open(name_file);
+		out << number << std::endl;
+		out.close();
 		
 }
 
@@ -61,14 +95,7 @@ void main_menu() {
 
 						switch(choose_category) {
 								case (1):
-										bool res = isExist("expenses/food.txt");
-										if(res) {
-												std::cout << "exist" << std::endl;
-										}
-										else {
-												std::cout << "not exist" << std::endl;
-												add_expense_to_file("food.txt", summ);
-										}
+										add_expensive("food.txt", summ);
 										break;
 						}
 				}
