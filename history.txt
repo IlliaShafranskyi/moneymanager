@@ -1,0 +1,9 @@
+food - 120
+transport - 200
+recreation - 123
+gifts - 500
+food - 213
+food - 200
+food - 200
+transport - 200
+gifts - 100
